@@ -1,5 +1,5 @@
 import React from 'react'
-import Cliploader from 'react-spinners/Cliploader';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 
 const override = {
@@ -8,7 +8,7 @@ const override = {
 }
 const Spinner = ({ loading }) => {
   return (
-      <Cliploader
+      <ClipLoader
           color='#4338ca'
           loading={loading}
           cssOverride={override}
