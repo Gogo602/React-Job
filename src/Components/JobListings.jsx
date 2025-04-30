@@ -12,7 +12,7 @@ const JobListings = ({isHome = false}) => {
 
     useEffect(() => {
         const fetchJobs = async () => {
-            const apiUrl = isHome ? ' /api/jobs?_limit=3' : ' /api/jobs'
+            const apiUrl = '/jobs.json'
             try {
                 const res = await fetch(apiUrl)
                 const data = await res.json();
@@ -26,7 +26,8 @@ const JobListings = ({isHome = false}) => {
         }
 
         fetchJobs();
-     }, []);
+    }, []);
+    const jobListings = isHome ? jobs.slice(0, 3) : jobs;
 
     return (
         <section className="bg-blue-50 px-4 py-10">
@@ -39,7 +40,7 @@ const JobListings = ({isHome = false}) => {
                         <Spinner loading={loading} />
                     ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {jobs.map((job) => (
+                        {jobListings.map((job) => (
                             <JobListing key={job.id} job={job} />  
                         )) }
                         </div>
