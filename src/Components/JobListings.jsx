@@ -12,12 +12,18 @@ const JobListings = ({isHome = false}) => {
 
     useEffect(() => {
         const fetchJobs = async () => {
-            const apiUrl = '/jobs.json'
+            const isProduction = import.meta.env.MODE === 'production';
+            const apiUrl = isProduction ? '/api/jobs.json' : '/jobs.json';
+            console.log('Fetching from:', apiUrl);
+
             try {
-                const res = await fetch(apiUrl)
+                const res = await fetch(apiUrl);
+                if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
                 const data = await res.json();
-                setJobs(data)
-                
+                 console.log('Data before setting jobs:', data);
+                setJobs(data.jobs);
             } catch (error) {
                 console.log('Error Fetching Data', error)
             } finally {
@@ -27,6 +33,7 @@ const JobListings = ({isHome = false}) => {
 
         fetchJobs();
     }, []);
+
     const jobListings = isHome ? jobs.slice(0, 3) : jobs;
 
     return (
