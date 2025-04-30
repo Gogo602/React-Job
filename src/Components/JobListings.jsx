@@ -13,7 +13,7 @@ const JobListings = ({isHome = false}) => {
     useEffect(() => {
         const fetchJobs = async () => {
             const isProduction = import.meta.env.MODE === 'production';
-            const apiUrl = isProduction ? '/api/jobs.json' : '/jobs.json';
+            const apiUrl = isProduction ? '/jobs.json' : '/jobs.json';
             console.log('Fetching from:', apiUrl);
 
             try {
