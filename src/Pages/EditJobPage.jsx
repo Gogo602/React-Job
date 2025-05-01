@@ -1,23 +1,59 @@
-import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useParams,  useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-const EditJobPage = ({updateJobSubmit}) => {
-    const job = useLoaderData();
-
-    const [title,  setTitle] = useState(job.title);
-        const [type,  setType] = useState(job.type);
-        const [location,  setLocation] = useState(job.location);
-        const [description,  setDescription] = useState(job.description);
-        const [salary,  setSalary] = useState(job.salary);
-        const [companyName,  setCompanyName] = useState(job.company.name);
-        const [companyDescription,  setCompanyDescription] = useState(job.company.description);
-        const [contactEmail,  setContactEmail] = useState(job.company.contactEmail);
-        const [contactPhone,  setContactPhone] = useState(job.company.contactPhone);
+const EditJobPage = ({ updateJobSubmit }) => {
+  
+        const [job, setJob] = useState(null);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+        const [title,  setTitle] = useState("");
+        const [type,  setType] = useState("");
+        const [location,  setLocation] = useState("");
+        const [description,  setDescription] = useState("");
+        const [salary,  setSalary] = useState("");
+        const [companyName,  setCompanyName] = useState("");
+        const [companyDescription,  setCompanyDescription] = useState("");
+        const [contactEmail,  setContactEmail] = useState("");
+        const [contactPhone,  setContactPhone] = useState("");
         
         const navigate = useNavigate();
 
         const { id } = useParams();
+  
+  useEffect(() => {
+    const fetchJobDetails = async () => {
+      try {
+        const res = await fetch('/jobs.json');
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        const data = await res.json();
+        const foundJob = data.jobs.find((j) => j.id === id);
+        if (foundJob) {
+          setJob(foundJob);
+          setTitle(foundJob.title);
+          setType(foundJob.type);
+          setLocation(foundJob.location);
+          setDescription(foundJob.description);
+          setSalary(foundJob.salary);
+          setCompanyName(foundJob.company.name);
+          setCompanyDescription(foundJob.company.description);
+          setContactEmail(foundJob.company.contactEmail);
+          setContactPhone(foundJob.company.contactPhone);
+        } else {
+          setError('Job not found.');
+        }
+      } catch (error) {
+        setError('Error loading job details.');
+        console.error('Error fetching job:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobDetails();
+  }, [id]);
    
        const submitForm = (e) => {
            e.preventDefault();
